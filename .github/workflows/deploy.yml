@@ -45,4 +45,11 @@ jobs:
             docker load < ~/hiringultramy-app.tar
             docker stop hiringultramy || true
             docker rm hiringultramy || true
-            docker run -d --name hiringultramy -p 8080:8080 hiringultramy-app
+            docker run -d \
+              --name hiringultramy \
+              -p 8080:8080 \
+              -e DB_URL=${{ secrets.DB_URL }} \
+              -e DB_USER=${{ secrets.DB_USER }} \
+              -e DB_PASS=${{ secrets.DB_PASS }} \
+              hiringultramy-app
+  
