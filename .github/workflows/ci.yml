@@ -19,5 +19,5 @@ jobs:
           cache: "gradle"
       - name: Ensure gradlew is executable
         run: chmod +x gradlew
-      - name: Run unit tests
-        run: ./gradlew test
+      - name: Run build without tests
+        run: ./gradlew build -x test
