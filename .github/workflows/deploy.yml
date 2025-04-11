@@ -21,10 +21,10 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker image
-        run: docker build -t hiringUltramy-app .
+        run: docker build -t hiringultramy-app .
 
       - name: Save Docker image to archive
-        run: docker save hiringUltramy-app > hiringUltramy-app.tar
+        run: docker save hiringultramy-app > hiringultramy-app.tar
 
       - name: Copy image to EC2
         uses: appleboy/scp-action@master
@@ -32,7 +32,7 @@ jobs:
           host: ${{ secrets.HOST_DNS }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "hiringUltramy-app.tar"
+          source: "hiringultramy-app.tar"
           target: "~/"
 
       - name: Run Docker on EC2
@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            docker load < ~/hiringUltramy-app.tar
-            docker stop hiringUltramy || true
-            docker rm hiringUltramy || true
-            docker run -d --name hiringUltramy -p 8080:8080 hiringUltramy-app
+            docker load < ~/hiringultramy-app.tar
+            docker stop hiringultramy || true
+            docker rm hiringultramy || true
+            docker run -d --name hiringultramy -p 8080:8080 hiringultramy-app
