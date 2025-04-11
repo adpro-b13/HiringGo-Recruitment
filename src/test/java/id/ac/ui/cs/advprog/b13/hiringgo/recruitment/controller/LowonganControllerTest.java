@@ -1,58 +1,38 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.Lowongan;
-import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.service.LowonganService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(LowonganController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class LowonganControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private LowonganService lowonganService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private MockMvc mvc;
 
     @Test
-    void testGetAllLowongan() throws Exception {
-        Lowongan lowongan = new Lowongan("PBO", "2024/2025", "Genap", 2);
-        lowongan.setId(1L);
-        when(lowonganService.findAll()).thenReturn(List.of(lowongan));
-
-        mockMvc.perform(get("/lowongan"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].mataKuliah").value("PBO"))
-                .andExpect(jsonPath("$[0].tahunAjaran").value("2024/2025"));
+    public void testGetAllLowongan() throws Exception {
+        mvc.perform(get("/lowongan/list"))
+                .andExpect(status().isOk());
     }
+    
 
     @Test
-    void testCreateLowongan() throws Exception {
-        Lowongan lowongan = new Lowongan("PBO", "2024/2025", "Genap", 2);
-        lowongan.setId(1L);
-
-        when(lowonganService.save(any())).thenReturn(lowongan);
-
-        mockMvc.perform(post("/lowongan")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(lowongan)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.mataKuliah").value("PBO"));
+    public void testCreateLowonganPost() throws Exception {
+        mvc.perform(post("/lowongan/create")
+                        .param("matakuliah", "Pemrograman Lanjut")
+                        .param("tahunAjaran", "2024/2025")
+                        .param("semester", "Ganjil")
+                        .param("jumlahAsisten", "3"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/lowongan/list"));
     }
 }
