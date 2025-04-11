@@ -47,7 +47,6 @@ jobs:
             docker rm hiringultramy || true
             docker run -d \
               --name hiringultramy \
-              --add-host=host.docker.internal:host-gateway \
               -p 8080:8080 \
               -e DB_URL=${{ secrets.DB_URL }} \
               -e DB_USER=${{ secrets.DB_USER }} \
