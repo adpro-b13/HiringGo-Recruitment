@@ -31,6 +31,14 @@ public class Lowongan {
         this.jumlahAsistenDibutuhkan = jumlahAsistenDibutuhkan;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) { // Added setter
+        this.id = id;
+    }
+
     public String getMataKuliah() {
         return mataKuliah;
     }
@@ -67,11 +75,15 @@ public class Lowongan {
         return jumlahAsistenMendaftar;
     }
 
+    public void setJumlahAsistenMendaftar(int jumlahAsistenMendaftar) { // Optional if needed
+        this.jumlahAsistenMendaftar = jumlahAsistenMendaftar;
+    }
+
     public int getJumlahAsistenDiterima() {
         return jumlahAsistenDiterima;
     }
 
-    public Long getId() {
-        return id;
+    public void setJumlahAsistenDiterima(int jumlahAsistenDiterima) { // Optional if needed
+        this.jumlahAsistenDiterima = jumlahAsistenDiterima;
     }
 }
