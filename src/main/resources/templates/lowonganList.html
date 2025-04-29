@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Daftar Lowongan</title>
+</head>
+<body>
+<h1 th:text="${message}">Daftar Lowongan</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Mata Kuliah</th>
+        <th>Tahun Ajaran</th>
+        <th>Semester</th>
+        <th>Jumlah Asisten Dibutuhkan</th>
+        <th>Aksi</th> <!-- New column for Edit/Delete buttons -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="lowongan : ${lowonganList}">
+        <td th:text="${lowongan.mataKuliah}">Mata Kuliah</td>
+        <td th:text="${lowongan.tahunAjaran}">Tahun Ajaran</td>
+        <td th:text="${lowongan.semester}">Semester</td>
+        <td th:text="${lowongan.jumlahAsistenDibutuhkan}">Jumlah Asisten</td>
+        <td>
+            <a th:href="@{/lowongan/edit/{id}(id=${lowongan.id})}">Edit</a>
+            |
+            <form th:action="@{/lowongan/delete/{id}(id=${lowongan.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Are you sure you want to delete this lowongan?');">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<a th:href="@{/lowongan/create}">Tambah Lowongan Baru</a>
+</body>
+</html>
