@@ -1,7 +1,28 @@
 <!DOCTYPE html>
-<html>
-<head><title>Lowongan List</title></head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Lowongan</title>
+</head>
 <body>
-    <h1>Daftar Lowongan</h1>
+<h1 th:text="${formTitle}">Form Buat Lowongan</h1>
+
+<form action="#" th:action="@{/lowongan/create}" th:method="post">
+    <label for="mataKuliah">Mata Kuliah:</label><br>
+    <input type="text" id="mataKuliah" name="matakuliah" required><br><br>
+
+    <label for="tahunAjaran">Tahun Ajaran:</label><br>
+    <input type="text" id="tahunAjaran" name="tahunAjaran" placeholder="contoh: 2024/2025" required><br><br>
+
+    <label for="semester">Semester:</label><br>
+    <input type="text" id="semester" name="semester" placeholder="contoh: Genap / Ganjil" required><br><br>
+
+    <label for="jumlahAsistenDibutuhkan">Jumlah Asisten Dibutuhkan:</label><br>
+    <input type="number" id="jumlahAsistenDibutuhkan" name="jumlahAsisten" min="1" required><br><br>
+
+    <button type="submit">Buat Lowongan</button>
+</form>
+
+<br>
+<a th:href="@{/lowongan/list}">Kembali ke Daftar Lowongan</a>
 </body>
 </html>

@@ -23,7 +23,6 @@ public class LowonganControllerTest {
         mvc.perform(get("/lowongan/list"))
                 .andExpect(status().isOk());
     }
-    
 
     @Test
     public void testCreateLowonganPost() throws Exception {
