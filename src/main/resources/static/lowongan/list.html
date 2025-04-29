@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daftar Lowongan</title>
+</head>
+<body>
+<h1>Daftar Lowongan</h1>
+
+<a href="/lowongan/create.html">Tambah Lowongan Baru</a>
+
+<table border="1" id="lowongan-table">
+    <thead>
+    <tr>
+        <th>Mata Kuliah</th>
+        <th>Tahun Ajaran</th>
+        <th>Semester</th>
+        <th>Jumlah Asisten Dibutuhkan</th>
+        <th>Aksi</th>
+    </tr>
+    </thead>
+    <tbody id="lowongan-body">
+    </tbody>
+</table>
+
+<script>
+    function loadLowongan() {
+        fetch('/api/lowongan/list')
+            .then(response => response.json())
+            .then(data => {
+                const body = document.getElementById('lowongan-body');
+                body.innerHTML = '';
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td>${item.mataKuliah}</td>
+                    <td>${item.tahunAjaran}</td>
+                    <td>${item.semester}</td>
+                    <td>${item.jumlahAsistenDibutuhkan}</td>
+                    <td>
+                        <a href="/lowongan/edit.html?id=${item.id}">Edit</a> |
+                        <button onclick="deleteLowongan(${item.id})">Delete</button>
+                    </td>
+                `;
+                    body.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching lowongan:', error));
+    }
+
+    function deleteLowongan(id) {
+        if (confirm('Are you sure you want to delete this lowongan?')) {
+            fetch(`/api/lowongan/delete/${id}`, { method: 'DELETE' })
+                .then(() => loadLowongan())
+                .catch(error => console.error('Error deleting:', error));
+        }
+    }
+
+    loadLowongan();
+</script>
+
+</body>
+</html>
