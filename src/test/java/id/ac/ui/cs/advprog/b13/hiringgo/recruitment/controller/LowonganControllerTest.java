@@ -34,4 +34,5 @@ public class LowonganControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/lowongan/list"));
     }
+
 }

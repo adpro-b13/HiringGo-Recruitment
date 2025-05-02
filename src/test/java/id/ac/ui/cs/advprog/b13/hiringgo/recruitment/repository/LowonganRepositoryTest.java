@@ -37,4 +37,30 @@ public class LowonganRepositoryTest {
         Optional<Lowongan> found = repository.findById(saved.getId());
         assertTrue(found.isEmpty());
     }
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        lowongan = new Lowongan("Matematika", "2024", "Genap", 3);
+    }
+
+    @Test
+    public void testRegisterForLowonganValid() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lowongan/1/register")
+                        .param("sks", "18")
+                        .param("ipk", "3.5"))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("success"));
+
+        verify(lowonganService, times(1)).registerForLowongan(anyLong(), anyInt(), anyDouble());
+    }
+
+    @Test
+    public void testRegisterForLowonganInvalid() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/lowongan/1/register")
+                        .param("sks", "0")
+                        .param("ipk", "5"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("failure"));
+    }
 }
