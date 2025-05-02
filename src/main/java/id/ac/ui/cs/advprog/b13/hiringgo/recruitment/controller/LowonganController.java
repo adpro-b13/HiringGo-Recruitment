@@ -1,11 +1,14 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.controller;
 
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.Lowongan;
+import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.PendaftaranLowongan;
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.service.LowonganService;
+import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.service.PendaftaranLowonganService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Controller
 @RequestMapping("/lowongan")
@@ -77,4 +80,29 @@ public class LowonganController {
         return "redirect:/lowongan/list";
     }
 
+    @Autowired
+    private PendaftaranLowonganService pendaftaranLowonganService;
+
+    @PostMapping("/daftar/{id}")
+    public String daftarLowongan(@PathVariable Long id,
+                                 @RequestParam double ipk,
+                                 @RequestParam int jumlahSks) {
+        if (ipk < 0 || ipk > 4) {
+            throw new IllegalArgumentException("IPK harus antara 0 dan 4");
+        }
+
+        Lowongan lowongan = lowonganService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Lowongan tidak ditemukan"));
+
+        PendaftaranLowongan pendaftaran = new PendaftaranLowongan();
+        pendaftaran.setIpk(ipk);
+        pendaftaran.setJumlahSks(jumlahSks);
+        pendaftaran.setLowongan(lowongan);
+
+        pendaftaranLowonganService.save(pendaftaran);
+        lowongan.setJumlahAsistenMendaftar(lowongan.getJumlahAsistenMendaftar() + 1);
+        lowonganService.save(lowongan);
+
+        return "redirect:/lowongan/detail/" + id;
+    }
 }

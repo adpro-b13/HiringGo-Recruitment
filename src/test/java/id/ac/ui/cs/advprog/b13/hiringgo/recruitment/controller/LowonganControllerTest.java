@@ -1,8 +1,11 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.controller;
 
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.Lowongan;
+import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.service.LowonganService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,8 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -40,29 +46,28 @@ public class LowonganControllerTest {
                 .andExpect(redirectedUrl("/lowongan/list"));
     }
 
+    @Mock
+    private LowonganService lowonganService; // Mocking LowonganService
+
+    @InjectMocks
+    private LowonganController lowonganController; // Injecting the controller
+
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        Lowongan lowongan = new Lowongan("Matematika", "2024", "Genap", 3);
+        MockitoAnnotations.openMocks(this); // Initialize mocks
     }
 
     @Test
-    public void testRegisterForLowonganValid() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/lowongan/1/register")
-                        .param("sks", "18")
-                        .param("ipk", "3.5"))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("success"));
+    void testDaftarLowonganPost() throws Exception {
+        Lowongan lowongan = new Lowongan("PBO", "2024", "Genap", 2);
+        lowongan.setId(1L);
 
-        verify(lowonganService, times(1)).registerForLowongan(anyLong(), anyInt(), anyDouble());
-    }
+        when(lowonganService.findById(1L)).thenReturn(Optional.of(lowongan));
 
-    @Test
-    public void testRegisterForLowonganInvalid() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/lowongan/1/register")
-                        .param("sks", "0")
-                        .param("ipk", "5"))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("failure"));
+        mvc.perform(post("/lowongan/daftar/1")
+                        .param("ipk", "3.9")
+                        .param("jumlahSks", "100"))
+                .andExpect(status().is3xxRedirection());
     }
 }
+

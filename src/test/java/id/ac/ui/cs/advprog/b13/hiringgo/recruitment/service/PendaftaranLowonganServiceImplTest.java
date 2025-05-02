@@ -5,14 +5,12 @@ import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.repository.PendaftaranLowong
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 public class PendaftaranLowonganServiceImplTest {
 
     @Mock
@@ -23,7 +21,6 @@ public class PendaftaranLowonganServiceImplTest {
 
     @Test
     void testSave() {
-
         PendaftaranLowongan pendaftaran = new PendaftaranLowongan();
 
         when(repository.save(pendaftaran)).thenReturn(pendaftaran);
@@ -36,14 +33,12 @@ public class PendaftaranLowonganServiceImplTest {
 
     @Test
     void testFindByLowonganId() {
-
         Long id = 1L;
         PendaftaranLowongan pendaftaran = new PendaftaranLowongan();
 
         pendaftaran.setId(1L);
 
         List<PendaftaranLowongan> list = List.of(pendaftaran);
-
         when(repository.findByLowonganId(id)).thenReturn(list);
 
         List<PendaftaranLowongan> result = service.findByLowongan(id);
