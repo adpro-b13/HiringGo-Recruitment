@@ -1,12 +1,17 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.controller;
 
+import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.Lowongan;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,7 +43,7 @@ public class LowonganControllerTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        lowongan = new Lowongan("Matematika", "2024", "Genap", 3);
+        Lowongan lowongan = new Lowongan("Matematika", "2024", "Genap", 3);
     }
 
     @Test
