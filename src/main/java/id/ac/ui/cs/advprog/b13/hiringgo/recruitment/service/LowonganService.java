@@ -10,4 +10,5 @@ public interface LowonganService {
     Optional<Lowongan> findById(Long id);
     List<Lowongan> findAll();
     void deleteById(Long id);
+    List<Lowongan> findByCreatedBy(Long userId);
 }

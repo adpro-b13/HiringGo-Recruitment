@@ -33,4 +33,10 @@ public class LowonganServiceImpl implements LowonganService {
     public void deleteById(Long id) {
         lowonganRepository.deleteById(id);
     }
+
+    @Override
+    public List<Lowongan> findByCreatedBy(Long userId) {
+        return lowonganRepository.findByCreatedBy(userId);
+    }
+
 }

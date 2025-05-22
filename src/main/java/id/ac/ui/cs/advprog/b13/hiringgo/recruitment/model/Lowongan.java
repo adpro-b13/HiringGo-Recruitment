@@ -21,6 +21,8 @@ public class Lowongan {
     private int jumlahAsistenMendaftar = 0;
     private int jumlahAsistenDiterima = 0;
 
+    private Long createdBy;
+
     public Lowongan() {
     }
 
@@ -85,5 +87,13 @@ public class Lowongan {
 
     public void setJumlahAsistenDiterima(int jumlahAsistenDiterima) { // Optional if needed
         this.jumlahAsistenDiterima = jumlahAsistenDiterima;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
     }
 }
