@@ -11,6 +11,8 @@ import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.security.JwtTokenProvider;
 import org.springframework.security.access.prepost.PreAuthorize;
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.PendaftaranLowongan;
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.service.PendaftaranLowonganService;
+import java.util.concurrent.CompletableFuture;
+
 
 
 
@@ -36,6 +38,12 @@ public class LowonganRestController {
 
         return lowonganService.findByCreatedBy(userId);
     }
+
+    @GetMapping("/list")
+    public CompletableFuture<List<Lowongan>> listLowongan() {
+        return lowonganService.findAll();
+    }
+
 
 
     @PostMapping("/create")

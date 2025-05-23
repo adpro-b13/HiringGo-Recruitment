@@ -1,7 +1,13 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Getter
+@Setter
 @Entity
 @Table(
         name = "lowongan",

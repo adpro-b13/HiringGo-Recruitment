@@ -1,21 +1,23 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.security;
 
-import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.security.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
+
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -35,15 +37,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (jwtTokenProvider.validateToken(token)) {
                 Claims claims = jwtTokenProvider.getAllClaimsFromToken(token);
                 String username = claims.getSubject(); // usually email
-                String role = claims.get("roles", String.class); // e.g. ROLE_MAHASISWA
                 Long userId = claims.get("userId", Integer.class).longValue();
+                Object rolesClaim = claims.get("roles");
 
-                var authorities = Collections.singletonList(
-                        new org.springframework.security.core.authority.SimpleGrantedAuthority(role)
-                );
+                List<org.springframework.security.core.authority.SimpleGrantedAuthority> authorities;
+
+                if (rolesClaim instanceof String role) {
+                    // roles is a single string: "ROLE_DOSEN"
+                    authorities = Collections.singletonList(
+                            new org.springframework.security.core.authority.SimpleGrantedAuthority(role)
+                    );
+                } else if (rolesClaim instanceof List<?> roleList) {
+                    // roles is a list: ["ROLE_DOSEN", "ROLE_ADMIN"]
+                    authorities = roleList.stream()
+                            .map(Object::toString)
+                            .map(org.springframework.security.core.authority.SimpleGrantedAuthority::new)
+                            .toList();
+                } else {
+                    authorities = Collections.emptyList(); // No usable roles
+                }
 
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(userId, null, authorities);
+
 
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(auth);
