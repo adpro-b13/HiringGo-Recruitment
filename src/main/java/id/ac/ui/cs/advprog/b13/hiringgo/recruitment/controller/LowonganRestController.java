@@ -1,7 +1,9 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.controller;
 
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.Lowongan;
+import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.PendaftaranLowongan;
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.service.LowonganService;
+import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.service.PendaftaranLowonganService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
