@@ -164,6 +164,47 @@ public class LowonganRestController {
         return pendaftaranLowonganService.findByLowongan(id);
     }
 
+    @PutMapping("/pelamar/{pendaftaranId}/terima")
+    @PreAuthorize("hasRole('ROLE_DOSEN')")
+    public PendaftaranLowongan terimaPelamar(@PathVariable Long pendaftaranId, HttpServletRequest request) {
+        return prosesPelamar(pendaftaranId, request, "DITERIMA");
+    }
+
+    @PutMapping("/pelamar/{pendaftaranId}/tolak")
+    @PreAuthorize("hasRole('ROLE_DOSEN')")
+    public PendaftaranLowongan tolakPelamar(@PathVariable Long pendaftaranId, HttpServletRequest request) {
+        return prosesPelamar(pendaftaranId, request, "DITOLAK");
+    }
+
+    private PendaftaranLowongan prosesPelamar(Long pendaftaranId, HttpServletRequest request, String status) {
+        Claims claims = jwtTokenProvider.getAllClaimsFromToken(request.getHeader("Authorization").substring(7));
+        Long userId = claims.get("userId", Integer.class).longValue();
+
+        PendaftaranLowongan pendaftaran = pendaftaranLowonganService.findById(pendaftaranId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pendaftaran not found"));
+
+        Lowongan lowongan = pendaftaran.getLowongan();
+
+        if (!lowongan.getCreatedBy().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the creator of this Lowongan");
+        }
+
+        if (status.equals("DITERIMA")) {
+            long diterima = pendaftaranLowonganService.countAcceptedByLowonganId(lowongan.getId());
+            if (diterima >= lowongan.getJumlahAsistenDibutuhkan()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kuota sudah penuh");
+            }
+
+            lowongan.setJumlahAsistenDiterima(lowongan.getJumlahAsistenDiterima() + 1);
+            lowonganService.save(lowongan);
+        }
+
+        pendaftaran.setStatus(status);
+        return pendaftaranLowonganService.save(pendaftaran);
+    }
+
+
+
 
 
 }
