@@ -24,6 +24,8 @@ public class PendaftaranLowongan {
     @JoinColumn(name = "lowongan_id", nullable = false)
     private Lowongan lowongan;
 
+    private String status = "DITUNDA";
+
     public PendaftaranLowongan() {}
 
     // Getters and setters

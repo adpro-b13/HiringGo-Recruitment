@@ -98,6 +98,15 @@ public class LowonganRestController {
         return lowonganService.save(existing);
     }
 
+    @GetMapping("/status")
+    @PreAuthorize("hasRole('ROLE_MAHASISWA')")
+    public List<PendaftaranLowongan> lihatStatusLamaran(HttpServletRequest request) {
+        Claims claims = jwtTokenProvider.getAllClaimsFromToken(request.getHeader("Authorization").substring(7));
+        Long mahasiswaId = claims.get("userId", Integer.class).longValue();
+
+        return pendaftaranLowonganService.findByMahasiswaId(mahasiswaId);
+    }
+
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ROLE_DOSEN')")
