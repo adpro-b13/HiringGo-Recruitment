@@ -2,6 +2,11 @@ package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model;
 
 import jakarta.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 public class PendaftaranLowongan {
 
@@ -12,6 +17,8 @@ public class PendaftaranLowongan {
     private double ipk;
 
     private int jumlahSks;
+
+    private Long mahasiswaId;
 
     @ManyToOne
     @JoinColumn(name = "lowongan_id", nullable = false)
