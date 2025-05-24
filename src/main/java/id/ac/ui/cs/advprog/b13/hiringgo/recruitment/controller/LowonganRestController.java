@@ -133,7 +133,7 @@ public class LowonganRestController {
                                               HttpServletRequest request) {
 
         if (ipk < 0 || ipk > 4) {
-            throw new IllegalArgumentException("IPK harus antara 0 dan 4");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "IPK harus antara 0 dan 4");
         }
 
         Claims claims = jwtTokenProvider.getAllClaimsFromToken(request.getHeader("Authorization").substring(7));
@@ -211,6 +211,7 @@ public class LowonganRestController {
         pendaftaran.setStatus(status);
         return pendaftaranLowonganService.save(pendaftaran);
     }
+
 
 
 

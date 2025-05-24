@@ -43,16 +43,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 List<org.springframework.security.core.authority.SimpleGrantedAuthority> authorities;
 
                 if (rolesClaim instanceof String role) {
-                    // roles is a single string: "ROLE_DOSEN"
                     authorities = Collections.singletonList(
                             new org.springframework.security.core.authority.SimpleGrantedAuthority(role)
                     );
-                } else if (rolesClaim instanceof List<?> roleList) {
-                    // roles is a list: ["ROLE_DOSEN", "ROLE_ADMIN"]
-                    authorities = roleList.stream()
-                            .map(Object::toString)
-                            .map(org.springframework.security.core.authority.SimpleGrantedAuthority::new)
-                            .toList();
                 } else {
                     authorities = Collections.emptyList(); // No usable roles
                 }

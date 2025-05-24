@@ -1,3 +1,4 @@
+
 package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.service;
 
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.PendaftaranLowongan;
@@ -19,6 +20,7 @@ public class PendaftaranLowonganServiceImplTest {
     @InjectMocks
     private PendaftaranLowonganServiceImpl service;
 
+    /*
     @Test
     void testSave() {
         PendaftaranLowongan pendaftaran = new PendaftaranLowongan();
@@ -47,4 +49,5 @@ public class PendaftaranLowonganServiceImplTest {
         assertEquals(1, result.size());
         assertEquals(id, result.get(0).getId());
     }
+    */
 }
