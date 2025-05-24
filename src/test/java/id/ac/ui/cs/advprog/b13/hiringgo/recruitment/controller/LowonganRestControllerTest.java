@@ -41,7 +41,7 @@ public class LowonganRestControllerTest {
             "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsInVzZXJJZCI6NCwibmFtYUxlbmdrYXAiOiJhIiwicm9sZXMiOjEsImlhdCI6MTc0Nzk5MDMwNSwiZXhwIjoxNzQ4MDc2NzA1fQ.9SVGjRpJMFJwXwWIQlpo79pa7zaofabbyPmMs9d9X5YewloUuVVuiDEI1LTpW123prYMEvXwNs5n2fjaBZ7jxQ";
 
     private static final String TOKEN =
-            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsInVzZXJJZCI6NCwibmFtYUxlbmdrYXAiOiJhIiwicm9sZXMiOiJST0xFX0RPU0VOIiwiaWF0IjoxNzQ3OTkwMzA1LCJleHAiOjE3NDgwNzY3MDV9.x0pVEJt-wpx7BJ8sq0t-F5Oe07tLcA1a0tTZ1s90_9h2awIUm8vlGiRf9Oehputz3ZrkR8kQhnTyNKlZ6YKvpg";
+            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsInVzZXJJZCI6NCwibmFtYUxlbmdrYXAiOiJhIiwicm9sZXMiOiJST0xFX0RPU0VOIiwiaWF0IjoxNzQ3OTkwMzA1LCJleHAiOjE3Nzk2MTI3MDV9.se5JVH9peoT7e8EZHnYL0zebsLGo-s_PP1EK3Wq1P7c3oTTfMHw70WAtr1q4sQlusIFBKunNFU9saExZ83ziEw";
 
     private static final String MAHASISWA_TOKEN =
             "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXNpc3dhQGV4YW1wbGUuY29tIiwidXNlcklkIjo2LCJuYW1hTGVuZ2thcCI6IkZ1bGFuIE1haGFzaXN3YSIsInJvbGVzIjoiUk9MRV9NQUhBU0lTV0EiLCJpYXQiOjE3NDgwNTY3MTUsImV4cCI6MTc0ODE0MzExNX0.C2cJD2y_PIMCJfemC6s0QyUusLmcmynUK7s2FAcQVUdJCQPI9h7t74B-P7fuhylewAHezXj8A-uXbCZwOhg_1A";
