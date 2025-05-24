@@ -51,5 +51,6 @@ jobs:
               -e DB_URL=${{ secrets.DB_URL }} \
               -e DB_USER=${{ secrets.DB_USER }} \
               -e DB_PASS=${{ secrets.DB_PASS }} \
+              -e JWT=${{ secrets.JWT }} \
               hiringultramy-app
   
