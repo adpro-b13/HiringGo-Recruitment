@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 
 @SpringBootApplication
-@EnableAsync // ✅ Add this annotation to enable @Async support
+@EnableAsync
 public class RecruitmentServiceApplication {
 
     public static void main(String[] args) {
@@ -24,7 +24,6 @@ public class RecruitmentServiceApplication {
                 System.out.println("✅ Connected to DB: " + conn.getMetaData().getURL());
             } catch (Exception e) {
                 System.out.println("❌ Failed to connect to DB");
-                e.printStackTrace();
             }
         };
     }

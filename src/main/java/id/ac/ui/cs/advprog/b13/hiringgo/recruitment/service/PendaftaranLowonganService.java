@@ -16,4 +16,6 @@ public interface PendaftaranLowonganService {
 
     CompletableFuture<PendaftaranLowongan> saveAsync(PendaftaranLowongan pendaftaran);
     CompletableFuture<List<PendaftaranLowongan>> findByLowonganAsync(Long lowonganId);
+    boolean existsByLowonganIdAndMahasiswaId(Long lowonganId, Long mahasiswaId);
+
 }

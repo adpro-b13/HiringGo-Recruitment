@@ -142,6 +142,10 @@ public class LowonganRestController {
         Lowongan lowongan = lowonganService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Lowongan not found"));
 
+        if (pendaftaranLowonganService.existsByLowonganIdAndMahasiswaId(id, mahasiswaId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anda sudah melamar lowongan ini");
+        }
+
         PendaftaranLowongan pendaftaran = new PendaftaranLowongan();
         pendaftaran.setIpk(ipk);
         pendaftaran.setJumlahSks(jumlahSks);
@@ -155,6 +159,7 @@ public class LowonganRestController {
 
         return pendaftaran;
     }
+
 
     @GetMapping("/pelamar/{id}")
     @PreAuthorize("hasRole('ROLE_DOSEN')")
@@ -198,7 +203,11 @@ public class LowonganRestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the creator of this Lowongan");
         }
 
-        if (status.equals("DITERIMA")) {
+        if ("DITERIMA".equals(pendaftaran.getStatus()) && "DITERIMA".equals(status)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mahasiswa sudah diterima");
+        }
+
+        if ("DITERIMA".equals(status)) {
             long diterima = pendaftaranLowonganService.countAcceptedByLowonganId(lowongan.getId());
             if (diterima >= lowongan.getJumlahAsistenDibutuhkan()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Kuota sudah penuh");
@@ -211,6 +220,7 @@ public class LowonganRestController {
         pendaftaran.setStatus(status);
         return pendaftaranLowonganService.save(pendaftaran);
     }
+
 
 
 

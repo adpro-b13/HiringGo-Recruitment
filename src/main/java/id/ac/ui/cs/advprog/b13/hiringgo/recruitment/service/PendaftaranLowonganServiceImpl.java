@@ -44,7 +44,7 @@ public class PendaftaranLowonganServiceImpl implements PendaftaranLowonganServic
     public List<PendaftaranLowongan> findByLowongan(Long lowonganId) {
         return repository.findByLowonganId(lowonganId);
     }
-    
+
     @Async
     @Override
     public CompletableFuture<PendaftaranLowongan> saveAsync(PendaftaranLowongan pendaftaran) {
@@ -57,7 +57,7 @@ public class PendaftaranLowonganServiceImpl implements PendaftaranLowonganServic
             return CompletableFuture.failedFuture(e);
         }
     }
-    
+
     @Async
     @Override
     public CompletableFuture<List<PendaftaranLowongan>> findByLowonganAsync(Long lowonganId) {
@@ -69,4 +69,10 @@ public class PendaftaranLowonganServiceImpl implements PendaftaranLowonganServic
             return CompletableFuture.failedFuture(e);
         }
     }
+
+    @Override
+    public boolean existsByLowonganIdAndMahasiswaId(Long lowonganId, Long mahasiswaId) {
+        return repository.existsByLowonganIdAndMahasiswaId(lowonganId, mahasiswaId);
+    }
+
 }

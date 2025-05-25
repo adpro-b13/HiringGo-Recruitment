@@ -14,5 +14,7 @@ public interface PendaftaranLowonganRepository extends JpaRepository<Pendaftaran
     @Async
     CompletableFuture<List<PendaftaranLowongan>> findByLowongan_Id(Long lowonganId);
     List<PendaftaranLowongan> findByMahasiswaId(Long mahasiswaId);
+    boolean existsByLowonganIdAndMahasiswaId(Long lowonganId, Long mahasiswaId);
+
 
 }
