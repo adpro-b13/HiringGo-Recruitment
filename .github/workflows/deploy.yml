@@ -17,14 +17,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
+      - name: Extract short SHA
+        run: echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker image
-        run: docker build -t hiringultramy-app .
+        run: docker build -t hiringultramy-app:${{ env.TAG }} .
 
       - name: Save Docker image to archive
-        run: docker save hiringultramy-app > hiringultramy-app.tar
+        run: docker save hiringultramy-app:${{ env.TAG }} > hiringultramy-app-${{ env.TAG }}.tar
 
       - name: Copy image to EC2
         uses: appleboy/scp-action@master
@@ -32,25 +35,28 @@ jobs:
           host: ${{ secrets.HOST_DNS }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "hiringultramy-app.tar"
-          target: "~/"
+          source: "hiringultramy-app-${{ env.TAG }}.tar"
+          target: "~/deploys/"
 
-      - name: Run Docker on EC2
+      - name: Deploy on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST_DNS }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            docker load < ~/hiringultramy-app.tar
+            TAG=${{ env.TAG }}
+            echo "Deploying version $TAG"
+            docker load < ~/deploys/hiringultramy-app-${TAG}.tar
             docker stop hiringultramy || true
             docker rm hiringultramy || true
             docker run -d \
               --name hiringultramy \
+              --restart unless-stopped \
               -p 8080:8080 \
               -e DB_URL=${{ secrets.DB_URL }} \
               -e DB_USER=${{ secrets.DB_USER }} \
               -e DB_PASS=${{ secrets.DB_PASS }} \
               -e JWT=${{ secrets.JWT }} \
-              hiringultramy-app
-  
+              hiringultramy-app:${TAG}
+            echo "$TAG" > ~/deploys/LATEST_DEPLOYED_TAG.txt
