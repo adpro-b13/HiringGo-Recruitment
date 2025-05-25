@@ -4,11 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync; // ✅ Add this import
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 
 @SpringBootApplication
+@EnableAsync
 public class RecruitmentServiceApplication {
 
     public static void main(String[] args) {
@@ -22,7 +24,6 @@ public class RecruitmentServiceApplication {
                 System.out.println("✅ Connected to DB: " + conn.getMetaData().getURL());
             } catch (Exception e) {
                 System.out.println("❌ Failed to connect to DB");
-                e.printStackTrace();
             }
         };
     }

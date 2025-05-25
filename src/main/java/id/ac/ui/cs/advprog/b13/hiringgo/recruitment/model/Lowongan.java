@@ -1,7 +1,13 @@
 package id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Getter
+@Setter
 @Entity
 @Table(
         name = "lowongan",
@@ -20,6 +26,8 @@ public class Lowongan {
 
     private int jumlahAsistenMendaftar = 0;
     private int jumlahAsistenDiterima = 0;
+
+    private Long createdBy;
 
     public Lowongan() {
     }
@@ -85,5 +93,13 @@ public class Lowongan {
 
     public void setJumlahAsistenDiterima(int jumlahAsistenDiterima) { // Optional if needed
         this.jumlahAsistenDiterima = jumlahAsistenDiterima;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
     }
 }

@@ -50,7 +50,7 @@ public class LowonganServiceImplTest {
 
         when(repository.findAll()).thenReturn(expected);
 
-        List<Lowongan> result = service.findAll();
+        List<Lowongan> result = service.findAll().join();
 
         assertEquals(expected, result);
         verify(repository, times(1)).findAll();
