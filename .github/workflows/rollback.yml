@@ -1,0 +1,42 @@
+name: "Rollback Deployment"
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Docker image tag to roll back to (or 'latest')"
+        required: true
+        default: "latest"
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Roll back to specified Docker image tag
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            if [ "${{ github.event.inputs.tag }}" = "latest" ]; then
+              TAG=$(cat ~/deploys/LATEST_DEPLOYED_TAG.txt)
+            else
+              TAG="${{ github.event.inputs.tag }}"
+            fi
+
+            echo "⏪ Rolling back to: $TAG"
+
+            docker load < ~/deploys/hiringultramy-app-${TAG}.tar
+            docker stop hiringultramy || true
+            docker rm hiringultramy || true
+            docker run -d \
+              --name hiringultramy \
+              --restart unless-stopped \
+              -p 8080:8080 \
+              -e DB_URL=${{ secrets.DB_URL }} \
+              -e DB_USER=${{ secrets.DB_USER }} \
+              -e DB_PASS=${{ secrets.DB_PASS }} \
+              -e JWT=${{ secrets.JWT }} \
+              hiringultramy-app:${TAG}
