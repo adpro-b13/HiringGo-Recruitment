@@ -121,7 +121,10 @@ public class LowonganRestController {
         Claims claims = jwtTokenProvider.getAllClaimsFromToken(request.getHeader("Authorization").substring(7));
         Long mahasiswaId = claims.get("userId", Integer.class).longValue();
 
-        return pendaftaranLowonganService.findByMahasiswaId(mahasiswaId);
+        List<PendaftaranLowongan> semuaPendaftaran = pendaftaranLowonganService.findByMahasiswaId(mahasiswaId);
+        return semuaPendaftaran.stream()
+                .filter(pendaftaran -> "DITERIMA".equals(pendaftaran.getStatus()))
+                .collect(java.util.stream.Collectors.toList());
     }
 
 
