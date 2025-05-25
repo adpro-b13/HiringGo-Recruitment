@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.model.PendaftaranLowongan;
 import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.service.PendaftaranLowonganService;
 import java.util.concurrent.CompletableFuture;
+import id.ac.ui.cs.advprog.b13.hiringgo.recruitment.template.DosenLowonganAction;
 
 
 
@@ -60,13 +61,21 @@ public class LowonganRestController {
 
         String token = authHeader.substring(7);
         Claims claims = jwtTokenProvider.getAllClaimsFromToken(token);
-
         Long userId = claims.get("userId", Integer.class).longValue();
 
-        newLowongan.setCreatedBy(userId);
+        if (!"Ganjil".equalsIgnoreCase(newLowongan.getSemester()) &&
+                !"Genap".equalsIgnoreCase(newLowongan.getSemester())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Semester harus 'Ganjil' atau 'Genap'");
+        }
 
+        if (!newLowongan.getTahunAjaran().matches("\\d{4}")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tahun ajaran harus dalam format 'YYYY'");
+        }
+
+        newLowongan.setCreatedBy(userId);
         return lowonganService.save(newLowongan);
     }
+
 
 
     @GetMapping("/{id}")
@@ -80,23 +89,31 @@ public class LowonganRestController {
     public Lowongan editLowongan(@PathVariable Long id,
                                  @RequestBody Lowongan edited,
                                  HttpServletRequest request) {
-        Claims claims = jwtTokenProvider.getAllClaimsFromToken(request.getHeader("Authorization").substring(7));
-        Long userId = claims.get("userId", Integer.class).longValue();
 
-        Lowongan existing = lowonganService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Lowongan not found"));
+        return new DosenLowonganAction<Lowongan>() {
+            @Override
+            protected Lowongan doAction(Lowongan existing) {
 
-        if (!existing.getCreatedBy().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the creator.");
-        }
+                if (!"Ganjil".equalsIgnoreCase(edited.getSemester()) &&
+                        !"Genap".equalsIgnoreCase(edited.getSemester())) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Semester harus 'Ganjil' atau 'Genap'");
+                }
 
-        existing.setMataKuliah(edited.getMataKuliah());
-        existing.setSemester(edited.getSemester());
-        existing.setTahunAjaran(edited.getTahunAjaran());
-        existing.setJumlahAsistenDibutuhkan(edited.getJumlahAsistenDibutuhkan());
+                if (!edited.getTahunAjaran().matches("\\d{4}")) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tahun ajaran harus dalam format 'YYYY'");
+                }
 
-        return lowonganService.save(existing);
+                existing.setMataKuliah(edited.getMataKuliah());
+                existing.setSemester(edited.getSemester());
+                existing.setTahunAjaran(edited.getTahunAjaran());
+                existing.setJumlahAsistenDibutuhkan(edited.getJumlahAsistenDibutuhkan());
+
+                return lowonganService.save(existing);
+            }
+        }.execute(id, request, lowonganService, jwtTokenProvider);
     }
+
+
 
     @GetMapping("/status")
     @PreAuthorize("hasRole('ROLE_MAHASISWA')")
@@ -110,20 +127,16 @@ public class LowonganRestController {
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ROLE_DOSEN')")
-    public void deleteLowongan(@PathVariable Long id,
-                               HttpServletRequest request) {
-        Claims claims = jwtTokenProvider.getAllClaimsFromToken(request.getHeader("Authorization").substring(7));
-        Long userId = claims.get("userId", Integer.class).longValue();
-
-        Lowongan lowongan = lowonganService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Lowongan not found"));
-
-        if (!lowongan.getCreatedBy().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not the creator.");
-        }
-
-        lowonganService.deleteById(id);
+    public void deleteLowongan(@PathVariable Long id, HttpServletRequest request) {
+        new DosenLowonganAction<Void>() {
+            @Override
+            protected Void doAction(Lowongan lowongan) {
+                lowonganService.deleteById(lowongan.getId());
+                return null;
+            }
+        }.execute(id, request, lowonganService, jwtTokenProvider);
     }
+
 
     @PostMapping("/daftar/{id}")
     @PreAuthorize("hasRole('ROLE_MAHASISWA')")

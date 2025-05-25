@@ -44,12 +44,12 @@ public class LowonganRestControllerTest {
             "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsInVzZXJJZCI6NCwibmFtYUxlbmdrYXAiOiJhIiwicm9sZXMiOiJST0xFX0RPU0VOIiwiaWF0IjoxNzQ3OTkwMzA1LCJleHAiOjE3Nzk2MTI3MDV9.se5JVH9peoT7e8EZHnYL0zebsLGo-s_PP1EK3Wq1P7c3oTTfMHw70WAtr1q4sQlusIFBKunNFU9saExZ83ziEw";
 
     private static final String MAHASISWA_TOKEN =
-            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXNpc3dhQGV4YW1wbGUuY29tIiwidXNlcklkIjo2LCJuYW1hTGVuZ2thcCI6IkZ1bGFuIE1haGFzaXN3YSIsInJvbGVzIjoiUk9MRV9NQUhBU0lTV0EiLCJpYXQiOjE3NDgwNTY3MTUsImV4cCI6MTc0ODE0MzExNX0.C2cJD2y_PIMCJfemC6s0QyUusLmcmynUK7s2FAcQVUdJCQPI9h7t74B-P7fuhylewAHezXj8A-uXbCZwOhg_1A";
+            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoYXNpc3dhQGV4YW1wbGUuY29tIiwidXNlcklkIjo2LCJuYW1hTGVuZ2thcCI6IkZ1bGFuIE1haGFzaXN3YSIsInJvbGVzIjoiUk9MRV9NQUhBU0lTV0EiLCJpYXQiOjE3NDgwNTY3MTUsImV4cCI6MTc4OTY3OTExNX0.EG4Z2D7ikg7WrS2Uc9zSBsLN-PKIcEuSI_cU2WGRxex5xZioQjz8Sj01EdKOiK5Rgr1GKRQ75TSt6-jbLZTFtw";
 
     @Test
     public void testCreateEditDeleteFlow() throws Exception {
         String mataKuliah = "Pengujian " + System.currentTimeMillis();
-        Lowongan lowongan = new Lowongan(mataKuliah, "2024/2025", "Genap", 3);
+        Lowongan lowongan = new Lowongan(mataKuliah, "2024", "Genap", 3);
 
         String response = mvc.perform(post("/api/lowongan/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -102,7 +102,7 @@ public class LowonganRestControllerTest {
 
     @Test
     public void testDaftarLihatStatusTerimaTolakPelamar() throws Exception {
-        Lowongan lowongan = new Lowongan("Teori Bahasa", "2024/2025", "Genap", 1);
+        Lowongan lowongan = new Lowongan("Teori Bahasa", "2024", "Genap", 1);
         lowongan.setCreatedBy(4L);
         lowongan = lowonganRepository.save(lowongan);
 
@@ -137,7 +137,7 @@ public class LowonganRestControllerTest {
 
     @Test
     public void testDaftarLowonganInvalidIPK() throws Exception {
-        Lowongan lowongan = new Lowongan("Validasi IPK", "2024/2025", "Genap", 1);
+        Lowongan lowongan = new Lowongan("Validasi IPK", "2024", "Genap", 1);
         lowongan.setCreatedBy(4L);
         lowongan = lowonganRepository.save(lowongan);
 
@@ -210,7 +210,7 @@ public class LowonganRestControllerTest {
 
     @Test
     public void testCreateLowonganWithoutToken() throws Exception {
-        Lowongan lowongan = new Lowongan("No Token Create", "2024/2025", "Ganjil", 1);
+        Lowongan lowongan = new Lowongan("No Token Create", "2024", "Ganjil", 1);
 
         mvc.perform(post("/api/lowongan/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -219,7 +219,7 @@ public class LowonganRestControllerTest {
     }
     @Test
     public void testCreateLowonganWithInvalidRole() throws Exception {
-        Lowongan lowongan = new Lowongan("Invalid Role", "2024/2025", "Ganjil", 1);
+        Lowongan lowongan = new Lowongan("Invalid Role", "2024", "Ganjil", 1);
 
         mvc.perform(post("/api/lowongan/create")
                         .contentType(MediaType.APPLICATION_JSON)
